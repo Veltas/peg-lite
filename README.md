@@ -1,4 +1,4 @@
 PEG-Lite
 ========
 
-C/C++ Library for parsing with PEGs, using the packrat algorithm.
+C11 Library for parsing with PEGs, using the packrat algorithm.
