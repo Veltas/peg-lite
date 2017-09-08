@@ -1,6 +1,4 @@
-CC = gcc
-CFLAGS = -std=c11 -Wall -pedantic -W -O3
-LDFLAGS = $(CFLAGS)
+CFLAGS = -std=c11 -Wall -pedantic -W -O2 -fPIC
+LDFLAGS = $(CFLAGS) -shared -Wl,-soname,libpeg-lite.so.0
 
-libpeg-lite.so: peg-lite.c
-  $(CC) $(LDFLAGS) $^ -o $@
+libpeg-lite.so.0.0.1: $(wildcard *.c)
