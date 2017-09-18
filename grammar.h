@@ -2,20 +2,27 @@
 #define GRAMMAR_H_INCLUDED
 
 #include <stddef.h>
+#include <stdint.h>
+#include <limits.h>
 #include <peg-lite.h>
 
+struct terminal {
+  unsigned char map[(1<<CHAR_BIT)/CHAR_BIT];
+};
+
 enum {
-  no_prefix,
-  and_prefix,
+  and_prefix = 1,
   not_prefix
 };
 
+struct prefixed {
+  unsigned char prefix;
+  unsigned      rule;
+};
+
 struct choice {
-  unsigned n_sequents;
-  struct {
-    unsigned char prefix;
-    unsigned rule;
-  } sequents[];
+  unsigned        n_prefixeds;
+  struct prefixed *prefixeds;
 };
 
 enum {
@@ -25,21 +32,31 @@ enum {
 
 struct rule {
   unsigned char type;
+  char          *name;
 
-  struct {
-    unsigned n_choices;
-    struct choice choices[];
-  };
+  union {
+    struct {
+      unsigned      n_choices;
+      struct choice *choices;
+    };
 
-  struct {
-    unsigned n_terminals;
-    struct terminal terminals[];
+    struct {
+      unsigned        n_terminals;
+      struct terminal **terminals;
+    };
   };
 };
 
 struct grammar {
-  unsigned n_rules;
-  union rule rules[];
+  unsigned        n_rules;
+  unsigned        n_terminals;
+  struct rule     *rules;
+  struct terminal *terminal_cache;
+};
+
+struct grammar_holder {
+  void           *stack_allocator;
+  struct grammar grammar;
 };
 
 #endif // GRAMMAR_H_INCLUDED
