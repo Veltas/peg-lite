@@ -37,9 +37,9 @@ Reduction algorithm
 
 Operator removal:
 
-* `a?` becomes `(/ a)`.
-* `a*` becomes new NT, with rule `(/ a newNTname)`.
-* `a+` creates new NT, becoming `(a newNTName)`, with rule `(/ a newNTname)`.
+* `a?` becomes `(a /)`.
+* `a*` becomes new NT, with rule `(a newNTname /)`.
+* `a+` creates new NT, becoming `(a newNTName)`, with rule `(a newNTname /)`.
 
 Simplify:
 
