@@ -32,17 +32,16 @@ enum {
 
 struct rule {
   unsigned char type;
+  bool          is_boring;
   char          *name;
-
   union {
     struct {
       unsigned      n_choices;
       struct choice *choices;
     };
-
     struct {
-      unsigned        n_terminals;
-      struct terminal **terminals;
+      unsigned n_terminals;
+      unsigned *terminals;
     };
   };
 };
@@ -55,7 +54,7 @@ struct grammar {
 };
 
 struct grammar_holder {
-  void           *stack_allocator;
+  void           *allocator;
   struct grammar grammar;
 };
 

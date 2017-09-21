@@ -3,6 +3,9 @@
 
 #include <stddef.h>
 
+void
+stack_acc_size(size_t *size_store, size_t add_size);
+
 void *
 load_stack_allocator(size_t capacity);
 

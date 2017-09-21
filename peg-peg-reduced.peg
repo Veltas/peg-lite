@@ -1,0 +1,154 @@
+# Hierarchical syntax
+# 0
+Grammar      <- Spacing Definition Grammar_1 EndOfFile
+# 1
+Grammar_1    <- Definition Grammar_1
+              / ''
+# 2
+Definition   <- IDENTIFIER LEFTARROW Expression
+
+# 3
+Expression   <- Sequence Expression
+# 4
+Exp_1        <- SLASH Sequence Exp_1
+              / ''
+# 5
+Sequence     <- Prefix Sequence
+              / ''
+# 6
+Prefix       <- Prefix_1 Prefix_2 Suffix
+# 7
+Prefix_1     <- AND
+              / NOT
+# 8
+Prefix_2     <- Prefix_1 Prefix_2
+              / ''
+# 9
+Suffix       <- Primary QUESTION
+              / Primary STAR
+              / Primary PLUS
+              / Primary
+# 10
+Primary      <- IDENTIFIER !LEFTARROW
+              / OPEN Expression CLOSE
+              / LITERAL
+              / CLASS
+              / DOT
+
+# Lexical syntax
+# 11
+IDENTIFIER   <- IdentStart Identifier_1 Spacing
+# 12
+Identifier_1 <- IdentCont Identifier_1
+              / ''
+# 13
+IdentStart   <- [a-zA-Z_]
+# 14
+IdentCont    <- [a-zA-Z_0-9]
+
+# 15
+LITERAL      <- Literal_3 Literal_1 Literal_3 Spacing
+              / Literal_4 Literal_2 Literal_4 Spacing
+# 16
+Literal_1    <- !Literal_3 Char Literal_1
+              / ''
+# 17
+Literal_2    <- !Literal_4 Char Literal_2
+              / ''
+# 18
+Literal_3    <- [']
+# 19
+Literal_4    <- ["]
+# 20
+CLASS        <- Class_1 Class_2 Class_3 Spacing
+# 21
+Class_1      <- '['
+# 22
+Class_2      <- !Class_3 Range Class_2
+              / ''
+# 23
+Class_3      <- ']'
+# 24
+Range        <- Char Range_1 Char
+              / Char
+# 25
+Range_1      <- '-'
+# 26
+Char         <- Char_1
+              / Char_2
+              / Char_5 Char_3
+              / !Char_6 Any
+# 27
+Char_1       <- '\\' [nrt'"\[\]\\]
+# 28
+Char_2       <- '\\' [0-2][0-7][0-7]
+# 29
+Char_3       <- Char_4
+              / ''
+# 30
+Char_4       <- [0-7]
+# 31
+Char_5       <- '\\' [0-7]
+# 32
+Char_6       <- '\\'
+
+# 33
+LEFTARROW    <- Leftarrow_1 Spacing
+# 34
+Leftarrow_1  <- '<-'
+# 35
+SLASH        <- Slash_1 Spacing
+# 36
+Slash_1      <- '/'
+# 37
+AND          <- And_1 Spacing
+# 38
+And_1        <- '&'
+# 39
+NOT          <- Not_1 Spacing
+# 40
+Not_1        <- '!'
+# 41
+QUESTION     <- Question_1 Spacing
+# 42
+Question_1   <- '?'
+# 43
+STAR         <- Star_1 Spacing
+# 44
+Star_1       <- '*'
+# 45
+PLUS         <- Plus_1 Spacing
+# 46
+Plus_1       <- '+'
+# 47
+OPEN         <- Open_1 Spacing
+# 48
+Open_1       <- '('
+# 49
+CLOSE        <- Close_1 Spacing
+# 50
+Close_1      <- ')'
+# 51
+DOT          <- Dot_1 Spacing
+# 52
+Dot_1        <- '.'
+
+# 53
+Spacing      <- Space Spacing
+              / Comment Spacing
+              / ''
+# 54
+Comment      <- Comment_1 Comment_2 EndOfLine
+# 55
+Comment_1    <- '#'
+Comment_2    <- !EndOfLine Any Comment_2
+              / ''
+Any          <- .
+Space        <- EndOfLine_1
+              / Space_1
+Space_1      <- ' ' / '\t' / '\n' / '\r'
+EndOfLine    <- EndOfLine_1
+              / EndOfLine_2
+EndOfLine_1  <- '\r\n'
+EndOfLine_2  <- '\n' / '\r'
+EndOfFile    <- !Any
