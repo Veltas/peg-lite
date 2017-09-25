@@ -9,7 +9,7 @@ flat_size_choice_contents(size_t *const result, const struct rule *const rule)
 {
   stack_acc_size(result, rule->n_choices * sizeof *rule->choices);
   for (unsigned j = 0; j < rule->n_choices; ++j) {
-    struct choice *const choice = rule->choices[j];
+    const struct choice *const choice = rule->choices[j];
     stack_acc_size(result, choice->n_prefixeds * sizeof *choice->prefixed);
   }
 }
@@ -25,7 +25,7 @@ flat_size_rules(size_t *const result, const struct grammar *const grammar)
 {
   stack_acc_size(result, grammar->n_rules * sizeof *rules);
   for (unsigned i = 0; i < grammar->n_rules; ++i) {
-    struct rule *const rule = grammar->rules + i;
+    const struct rule *const rule = grammar->rules + i;
     stack_acc_size(result, strlen(rule->name) + 1);
     if (rule->type == choice_type)
       flat_size_choice_contents(result, rule);
