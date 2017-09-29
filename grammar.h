@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <limits.h>
 #include <peg-lite.h>
 
@@ -16,8 +17,8 @@ enum {
 };
 
 struct prefixed {
-  unsigned char prefix;
   unsigned      rule;
+  unsigned char prefix;
 };
 
 struct choice {

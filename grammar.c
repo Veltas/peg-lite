@@ -9,21 +9,21 @@ flat_size_choice_contents(size_t *const result, const struct rule *const rule)
 {
   stack_acc_size(result, rule->n_choices * sizeof *rule->choices);
   for (unsigned j = 0; j < rule->n_choices; ++j) {
-    const struct choice *const choice = rule->choices[j];
-    stack_acc_size(result, choice->n_prefixeds * sizeof *choice->prefixed);
+    const struct choice *const choice = rule->choices + j;
+    stack_acc_size(result, choice->n_prefixeds * sizeof *choice->prefixeds);
   }
 }
 
 static void
 flat_size_terminal_contents(size_t *const result, const struct rule *const rule)
 {
-  stack_acc_size(result, rule->n_terminals * sizeof *rule->terminals)
+  stack_acc_size(result, rule->n_terminals * sizeof *rule->terminals);
 }
 
 static void
 flat_size_rules(size_t *const result, const struct grammar *const grammar)
 {
-  stack_acc_size(result, grammar->n_rules * sizeof *rules);
+  stack_acc_size(result, grammar->n_rules * sizeof *grammar->rules);
   for (unsigned i = 0; i < grammar->n_rules; ++i) {
     const struct rule *const rule = grammar->rules + i;
     stack_acc_size(result, strlen(rule->name) + 1);
@@ -58,12 +58,12 @@ flatten_grammar(struct grammar *grammar)
   void *const allocator = load_stack_allocator(flat_size(grammar));
   struct grammar_holder *const holder = stack_alloc(allocator, sizeof *holder);
   holder->allocator = allocator;
-  holder->grammar = grammar;
+  holder->grammar = *grammar;
   //TODO
 }
 
 void *
-peg_load_grammar(const char source[])
+peg_load_grammar(const char source[const])
 {
   //TODO
 }

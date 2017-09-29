@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdalign.h>
 #include <stdlib.h>
 
@@ -29,7 +30,7 @@ get_internals(void *xarray)
 void *
 xarray_expand_impl(void *xarray, const size_t element_size)
 {
-  struct xarray *const internals = get_internals(xarray);
+  struct xarray *internals = get_internals(xarray);
   if (++internals->size > internals->capacity) {
     internals->capacity = MAX(2 * internals->capacity, 1);
     internals = realloc(
@@ -43,7 +44,7 @@ xarray_expand_impl(void *xarray, const size_t element_size)
 void *
 xarray_resize_impl(void *xarray, const size_t element_size, size_t new_size)
 {
-  struct xarray *const internals = get_internals(xarray);
+  struct xarray *internals = get_internals(xarray);
   internals->size = new_size;
   if (new_size > internals->capacity) {
     internals->capacity = MAX(new_size, 2 * internals->capacity);
