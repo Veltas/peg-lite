@@ -4,7 +4,7 @@ LDFLAGS = $(CFLAGS) -shared -Wl,-soname,libpeg-lite.so.0
 OUT = libpeg-lite.so.0.0.1
 
 $(OUT): $(patsubst %.c,%.o,$(wildcard *.c))
-	$(CC) $(LDFLAGS) $^ $(LOADLOBES) $(LDLIBS) -o$@
+	$(CC) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) -o$@
 
 .PHONY: clean
 clean:
