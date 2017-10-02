@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdalign.h>
 #include <stdlib.h>
+#include "dll.h"
 
 #include "xarray.h"
 
@@ -11,7 +12,7 @@ struct xarray {
   alignas(max_align_t) unsigned char mem[];
 };
 
-void *
+DLL_LOCAL void *
 load_xarray_impl(const size_t element_size, const size_t start_size)
 {
   struct xarray *const xarray = calloc(
@@ -27,7 +28,7 @@ get_internals(void *xarray)
   return (void *)((unsigned char *)xarray - (offsetof(struct xarray, mem)));
 }
 
-void *
+DLL_LOCAL void *
 xarray_expand_impl(void *xarray, const size_t element_size)
 {
   struct xarray *internals = get_internals(xarray);
@@ -41,7 +42,7 @@ xarray_expand_impl(void *xarray, const size_t element_size)
   return xarray;
 }
 
-void *
+DLL_LOCAL void *
 xarray_resize_impl(void *xarray, const size_t element_size, size_t new_size)
 {
   struct xarray *internals = get_internals(xarray);
@@ -56,13 +57,13 @@ xarray_resize_impl(void *xarray, const size_t element_size, size_t new_size)
   return xarray;
 }
 
-size_t
+DLL_LOCAL size_t
 xarray_size(void *xarray)
 {
   return get_internals(xarray)->size;
 }
 
-void
+DLL_LOCAL void
 free_xarray(void *xarray)
 {
   free(get_internals(xarray));

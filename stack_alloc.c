@@ -1,5 +1,6 @@
 #include <stdalign.h>
 #include <stdlib.h>
+#include "dll.h"
 
 #include "stack_alloc.h"
 
@@ -18,13 +19,13 @@ stack_next_size(const size_t current_size, const size_t add_size)
   return current_size + add_size + MOD(-add_size, FUNDAMENTAL_ALIGN);
 }
 
-void
+DLL_LOCAL void
 stack_acc_size(size_t *const size_store, const size_t add_size)
 {
   *size_store = stack_next_size(*size_store, add_size);
 }
 
-void *
+DLL_LOCAL void *
 load_stack_allocator(size_t capacity)
 {
   struct stack_allocator *result =
@@ -33,7 +34,7 @@ load_stack_allocator(size_t capacity)
   return result;
 }
 
-void *
+DLL_LOCAL void *
 stack_alloc(void *const allocator, const size_t size)
 {
   struct stack_allocator *const stack = allocator;
@@ -46,7 +47,7 @@ stack_alloc(void *const allocator, const size_t size)
   return result;
 }
 
-void
+DLL_LOCAL void
 free_stack_allocator(void *const allocator)
 {
   free(allocator);

@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "stack_alloc.h"
+#include "dll.h"
 
 #include "grammar.h"
 
@@ -146,7 +147,7 @@ frag_grammar_free(struct grammar *const grammar)
   free(grammar->terminal_cache);
 }
 
-void *
+DLL_PUBLIC void *
 peg_load_grammar(const char source[const])
 {
   struct grammar grammar_store = {0};
@@ -157,7 +158,7 @@ peg_load_grammar(const char source[const])
   return holder;
 }
 
-void
+DLL_PUBLIC void
 peg_free_grammar(void *const grammar)
 {
   free_stack_allocator(((struct grammar_holder *)grammar)->allocator);
