@@ -59,4 +59,9 @@ struct grammar_holder {
   struct grammar grammar;
 };
 
+DLL_LOCAL struct grammar peg_grammar;
+
+DLL_LOCAL void
+assert_peg_grammar_loaded(void);
+
 #endif // GRAMMAR_H_INCLUDED

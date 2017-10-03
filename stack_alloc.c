@@ -1,6 +1,6 @@
 #include <stdalign.h>
 #include <stdlib.h>
-#include "dll.h"
+#include <peg-lite.h>
 
 #include "stack_alloc.h"
 

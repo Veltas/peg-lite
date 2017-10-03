@@ -25,7 +25,7 @@
   ARR_INIT(prefixeds, ((struct prefixed []){__VA_ARGS__}))
 
 // Based on peg-parser-codified.txt, and in turn peg-peg-reduced.peg
-static struct grammar peg_grammar = {
+DLL_LOCAL struct grammar peg_grammar = {
   .terminal_cache = (struct terminal [PEG_N_TERMINALS]){{{0}}},
   .n_terminals = PEG_N_TERMINALS,
   INIT_RULES(
@@ -409,7 +409,7 @@ terminal_has(struct terminal *const terminal, const unsigned char c)
   return terminal->map[i] & (1 << c%CHAR_BIT);
 }
 
-static void
+DLL_LOCAL void
 assert_peg_grammar_loaded(void)
 {
   static bool is_grammar_loaded = false;

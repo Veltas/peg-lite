@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "stack_alloc.h"
-#include "dll.h"
 
 #include "grammar.h"
 
