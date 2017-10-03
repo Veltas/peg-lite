@@ -1,7 +1,6 @@
 #include <stddef.h>
 #include <stdalign.h>
 #include <stdlib.h>
-#include <peg-lite.h>
 
 #include "xarray.h"
 

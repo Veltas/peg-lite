@@ -2,17 +2,18 @@
 #define STACK_ALLOC_H_INCLUDED
 
 #include <stddef.h>
+#include <peg-lite.h>
 
-void
+DLL_LOCAL void
 stack_acc_size(size_t *size_store, size_t add_size);
 
-void *
+DLL_LOCAL void *
 load_stack_allocator(size_t capacity);
 
-void *
+DLL_LOCAL void *
 stack_alloc(void *allocator, size_t size);
 
-void
+DLL_LOCAL void
 free_stack_allocator(void *allocator);
 
 #endif // STACK_ALLOC_H_INCLUDED
