@@ -467,7 +467,7 @@ assert_peg_grammar_loaded(void)
       {26, '\r'},
       {27, '\n'}
     };
-    for (size_t i = 0; i < sizeof singles / 2; ++i)
+    for (size_t i = 0; i < sizeof singles / sizeof *singles; ++i)
       terminal_insert(
         peg_grammar.terminal_cache + singles[i][0],
         singles[i][1]
