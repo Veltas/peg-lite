@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "stack_alloc.h"
+#include "xarray.h"
 
 #include "grammar.h"
 
@@ -130,20 +131,20 @@ flatten_grammar(const struct grammar *const grammar)
 }
 
 static void
-frag_grammar_free(struct grammar *const grammar)
+free_frag_grammar(struct grammar *const grammar)
 {
   const struct rule *const end = grammar->rules + grammar->n_rules;
   for (struct rule *rule = grammar->rules; rule != end; ++rule) {
     if (rule->type == choice_type) {
       const struct choice *const end = rule->choices + rule->n_choices;
       for (struct choice *choice = rule->choices; choice != end; ++choice)
-        free(choice->prefixeds);
-      free(rule->choices);
+        free_xarray(choice->prefixeds);
+      free_xarray(rule->choices);
     }
-    else free(rule->terminals);
+    else free_xarray(rule->terminals);
   }
-  free(grammar->rules);
-  free(grammar->terminal_cache);
+  free_xarray(grammar->rules);
+  free_xarray(grammar->terminal_cache);
 }
 
 DLL_PUBLIC void *
@@ -153,7 +154,7 @@ peg_load_grammar(const char source[const])
   struct grammar *const grammar = &grammar_store;
   //TODO
   struct grammar_holder *const holder = flatten_grammar(grammar);
-  frag_grammar_free(grammar);
+  free_frag_grammar(grammar);
   return holder;
 }
 
