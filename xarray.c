@@ -12,10 +12,10 @@ struct xarray {
 };
 
 DLL_LOCAL void *
-load_xarray_impl(const size_t element_size, const size_t start_size)
+load_xarray(const size_t start_size, const size_t element_size)
 {
-  struct xarray *const xarray = calloc(
-    1, sizeof (struct xarray) + start_size*element_size
+  struct xarray *const xarray = malloc(
+    sizeof (struct xarray) + start_size*element_size
   );
   xarray->capacity = xarray->size = start_size;
   return xarray->mem;

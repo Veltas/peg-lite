@@ -3,27 +3,27 @@
 
 #include <peg-lite.h>
 
-// Creates new xarray with given type, and starting size
-#define load_xarray(type, start_size) load_xarray_impl(sizeof(type), start_size)
+// Creates new xarray with given element size, and starting array length
 DLL_LOCAL void *
-load_xarray_impl(size_t element_size, size_t start_size);
+load_xarray(size_t start_size, size_t element_size);
 
-// Sets size of xarray to new_size
+// Sets size of xarray to new_size. Old array object may be invalidated/moved.
+// Returns the new array object.
 #define xarray_resize(xarray, new_size) \
   xarray_resize_impl(xarray, (sizeof *(xarray)), new_size)
 DLL_LOCAL void *
 xarray_resize_impl(void *xarray, size_t element_size, size_t new_size);
 
-// Increases size of xarray by 1
+// Increases size of array by 1.
 #define xarray_expand(xarray) xarray_expand_impl(xarray, sizeof *(xarray))
 DLL_LOCAL void *
 xarray_expand_impl(void *xarray, size_t element_size);
 
-// Get length of xarray
+// Get current length of array.
 DLL_LOCAL size_t
 xarray_size(void *xarray);
 
-// Destroy xarray
+// Deallocate array.
 DLL_LOCAL void
 free_xarray(void *xarray);
 

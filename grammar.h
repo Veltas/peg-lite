@@ -33,7 +33,8 @@ enum {
 
 struct rule {
   unsigned char type;
-  bool          is_boring;
+  bool          is_boring: 1,
+                is_left_associative: 1;
   char          *name;
   union {
     struct {
@@ -45,6 +46,8 @@ struct rule {
       unsigned *terminals;
     };
   };
+  peg_Hook parse_hook,
+           reject_hook;
 };
 
 struct grammar {
