@@ -168,7 +168,7 @@ DLL_LOCAL void
 set_remove(void *const set, void *const key)
 {
   struct list *const bucket = get_bucket(set, key);
-  remove_link(set, (void *)get_link(set, bucket, key)->data, bucket);
+  remove_link(set, get_link(set, bucket, key), bucket);
 }
 
 DLL_LOCAL void
