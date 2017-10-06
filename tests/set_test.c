@@ -12,20 +12,7 @@
 
 #define N_HASH_BYTES (sizeof (size_t))
 
-// 64-bit FNV-1a
-size_t
-string_hash(const void *const str_p)
-{
-  size_t result = 0xcbf29ce484222325ull;
-  const char *const str = str_p;
-  for (size_t i = 0; i<7; ++i) {
-    result *= 0x100000001b3ull;
-    result ^= str[i];
-  }
-  return result;
-}
-
-bool
+static bool
 string_cmp(const void *const s1, const void *const s2, const size_t len)
 {
   IGNORE(len);
@@ -45,13 +32,13 @@ not_zero(unsigned char str[const 8])
   for (size_t i = 0; i < 7; ++i) if (!str[i]) ++str[i];
 }
 
-#define N MIN((size_t)-1, 40000ull)
+#define N MIN((size_t)-1, 20000000ull)
 
 int
 main(void)
 {
   // Create set
-  void *const set_test = load_set(string_hash, string_cmp, 8, 0);
+  void *const set_test = load_set(set_str_hash_in_place, string_cmp, 8, 0);
   // Check size
   assert(!set_size(set_test));
   // Insert strings

@@ -8,7 +8,8 @@
 
 #include "set.h"
 
-#define EXPAND_RATIO 2/3
+// Use without brackets to substitute correct operation orders.
+#define EXPAND_RATIO 3/4
 
 struct list {
   struct link {
@@ -61,15 +62,6 @@ free_set(void *const set)
   free(set);
 }
 
-DLL_LOCAL _Bool
-set_memcmp(
-  const void   *const key_1,
-  const void   *const key_2,
-  const size_t key_size)
-{
-  return !memcmp(key_1, key_2, key_size);
-}
-
 static struct list *
 get_bucket(const struct set *const set, void *const key)
 {
@@ -87,26 +79,33 @@ get_link(
   return NULL;
 }
 
+static inline size_t
+expand_to(const size_t old_size)
+{
+  return 4*old_size;
+}
+
 static void
 expand(struct set *const set)
 {
-  const size_t n_buckets = xarray_size(set->buckets);
+  const size_t n_buckets     = xarray_size(set->buckets),
+               new_n_buckets = expand_to(n_buckets);
   // Cache xarrays of link pointers to match the new buckets layout
   struct link ***const new_lists =
-    malloc(sizeof (struct link ** [2*n_buckets]));
-  for (size_t i = 0; i < 2*n_buckets; ++i)
+    malloc(sizeof (struct link ** [new_n_buckets]));
+  for (size_t i = 0; i < new_n_buckets; ++i)
     new_lists[i] = load_xarray(0, sizeof *new_lists[i]);
   struct list *const end = set->buckets + n_buckets;
   for (struct list *bucket = set->buckets; bucket != end; ++bucket) {
     for (struct link *link = bucket->first; link; link = link->next) {
-      const size_t i = set->hash(link->data) % (2*n_buckets);
+      const size_t i = set->hash(link->data) % (new_n_buckets);
       new_lists[i] = xarray_expand(new_lists[i]);
       new_lists[i][xarray_size(new_lists[i])-1] = link;
     }
   }
   // Re-form lists
-  set->buckets = xarray_resize(set->buckets, 2*n_buckets);
-  for (size_t i = 0; i < 2*n_buckets; ++i) {
+  set->buckets = xarray_resize(set->buckets, new_n_buckets);
+  for (size_t i = 0; i < new_n_buckets; ++i) {
     const size_t n_links = xarray_size(new_lists[i]);
     if (n_links) {
       set->buckets[i] = (struct list){
@@ -185,4 +184,41 @@ DLL_LOCAL size_t
 set_size(const void *const set)
 {
   return ((const struct set *)set)->size;
+}
+
+DLL_LOCAL _Bool
+set_memcmp(
+  const void   *const key_1,
+  const void   *const key_2,
+  const size_t key_size)
+{
+  return !memcmp(key_1, key_2, key_size);
+}
+
+// 64-bit FNV-1a hash
+
+#define FNV_1A_INIT 0xcbf29ce484222325ull
+#define FNV_1A_PRIME 0x100000001b3ull
+
+static inline size_t
+hash_fnv_1a(const char *const str)
+{
+  size_t result = FNV_1A_INIT;
+  for (size_t i = 0; str[i]; ++i) {
+    result ^= str[i];
+    result *= FNV_1A_PRIME;
+  }
+  return result;
+}
+
+DLL_LOCAL size_t
+set_str_hash(const void *const str)
+{
+  return hash_fnv_1a(*(char *const *)str);
+}
+
+DLL_LOCAL size_t
+set_str_hash_in_place(const void *const str)
+{
+  return hash_fnv_1a(str);
 }

@@ -16,10 +16,9 @@ typedef _Bool
 DLL_LOCAL void *
 load_set(set_hash hash, set_key_cmp cmp, size_t key_size, size_t n_buckets);
 
-// Basic memcmp implementation of load_set's cmp argument. memcmp will not work
-// on its own.
-DLL_LOCAL _Bool
-set_memcmp(const void *key_1, const void *key_2, size_t key_size);
+// Frees resources of set, and all stored keys.
+DLL_LOCAL void
+free_set(void *set);
 
 // Inserts copy of key into set, returns stored copy.
 DLL_LOCAL void *
@@ -42,8 +41,17 @@ set_remove_at(void *set, void *ptr);
 DLL_LOCAL size_t
 set_size(const void *set);
 
-// Frees resources of set, and all stored keys.
-DLL_LOCAL void
-free_set(void *set);
+// Basic memcmp implementation of load_set's cmp argument. memcmp will not work
+// on its own.
+DLL_LOCAL _Bool
+set_memcmp(const void *key_1, const void *key_2, size_t key_size);
+
+// Provided implementation of string hash. Key is char*
+DLL_LOCAL size_t
+set_str_hash(const void *str);
+
+// Provided implementation of string hash. Key is in-place char[n]
+DLL_LOCAL size_t
+set_str_hash_in_place(const void *str);
 
 #endif // SET_H_INCLUDED
