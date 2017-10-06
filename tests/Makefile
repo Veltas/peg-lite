@@ -7,10 +7,8 @@ TARGETS := $(patsubst %.c,%,$(wildcard *.c))
 .PHONY: all
 all: $(TARGETS)
 	for test in $(TARGETS); do {\
-		./$$test || \
-			{ echo ":::: $$test failed ::::"; exit 1; } ; \
 		valgrind --error-exitcode=1 --leak-check=full ./$$test || \
-			{ echo ":::: $$test failed in valgrind ::::"; exit 1; } ; \
+			{ echo ":::: $$test failed ::::"; exit 1; } ; \
 	}; done
 
 %: %.c
