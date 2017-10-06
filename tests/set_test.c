@@ -7,17 +7,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define IGNORE(x) ((void)sizeof (x))
 #define MIN(a, b) ((a) <= (b) ? (a) : (b))
 
 #define N_HASH_BYTES (sizeof (size_t))
-
-static bool
-string_cmp(const void *const s1, const void *const s2, const size_t len)
-{
-  IGNORE(len);
-  return !strcmp(s1, s2);
-}
 
 static void
 inc_str(unsigned char str[const 8])
@@ -32,13 +24,18 @@ not_zero(unsigned char str[const 8])
   for (size_t i = 0; i < 7; ++i) if (!str[i]) ++str[i];
 }
 
-#define N MIN((size_t)-1, 20000000ull)
+#define N MIN((size_t)-1, 200000ull)
 
 int
 main(void)
 {
   // Create set
-  void *const set_test = load_set(set_str_hash_in_place, string_cmp, 8, 0);
+  void *const set_test = load_set(
+    set_str_hash_in_place,
+    set_strcmp_in_place,
+    8,
+    0
+  );
   // Check size
   assert(!set_size(set_test));
   // Insert strings

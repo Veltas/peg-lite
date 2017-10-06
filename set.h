@@ -20,7 +20,7 @@ load_set(set_hash hash, set_key_cmp cmp, size_t key_size, size_t n_buckets);
 DLL_LOCAL void
 free_set(void *set);
 
-// Inserts copy of key into set, returns stored copy.
+// Inserts copy of key into set, returns stored copy. Storing a duplicate is UB.
 DLL_LOCAL void *
 set_insert(void *set, void *key);
 
@@ -45,6 +45,14 @@ set_size(const void *set);
 // on its own.
 DLL_LOCAL _Bool
 set_memcmp(const void *key_1, const void *key_2, size_t key_size);
+
+// Provided implementation of string comparison. Key is char*
+DLL_LOCAL _Bool
+set_strcmp(const void *key_1, const void *key_2, size_t key_size);
+
+// Provided implementation of string comparison. Key is in-place char[n]
+DLL_LOCAL _Bool
+set_strcmp_in_place(const void *key_1, const void *key_2, size_t key_size);
 
 // Provided implementation of string hash. Key is char*
 DLL_LOCAL size_t

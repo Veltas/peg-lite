@@ -211,6 +211,21 @@ hash_fnv_1a(const char *const str)
   return result;
 }
 
+#define IGNORE(x) ((void)sizeof (x))
+
+DLL_LOCAL _Bool
+set_strcmp(const void *key_1, const void *key_2, size_t key_size)
+{
+  IGNORE(key_size);
+  return !strcmp(*(char *const *)key_1, *(char *const *)key_2);
+}
+
+DLL_LOCAL _Bool
+set_strcmp_in_place(const void *key_1, const void *key_2, size_t key_size)
+{
+  return !strncmp(key_1, key_2, key_size);
+}
+
 DLL_LOCAL size_t
 set_str_hash(const void *const str)
 {
