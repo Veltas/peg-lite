@@ -123,21 +123,13 @@ expand(struct set *const set)
   free(new_lists);
 }
 
-static struct link *
-get_last_link(struct list *const bucket)
-{
-  struct link *last_link = bucket->first;
-  while (last_link) last_link = last_link->next;
-  return last_link;
-}
-
 DLL_LOCAL void *
 set_insert(void *const set, void *const key)
 {
   struct set *const set_i = set;
   if ((set_i->size + 1)*EXPAND_RATIO/xarray_size(set_i->buckets)) expand(set);
   struct list *const bucket = get_bucket(set_i, key);
-  struct link *const last_link = get_last_link(bucket),
+  struct link *const last_link = bucket->last,
               *const new_link = malloc(sizeof (struct link) + set_i->key_size);
   new_link->next = NULL;
   new_link->prev = last_link;
