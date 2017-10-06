@@ -1,4 +1,5 @@
 set_test
+xarray_test
 gmon.out
 *.gcov
 *.gcda

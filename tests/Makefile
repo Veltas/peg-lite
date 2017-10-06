@@ -16,6 +16,8 @@ all: $(TARGETS)
 
 set_test: ../set.c ../xarray.c
 
+xarray_test: ../xarray.c
+
 .PHONY: clean
 clean:
 	rm -f gmon.out *.gcov *.gcda *.gcno $(TARGETS)
