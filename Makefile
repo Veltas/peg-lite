@@ -1,11 +1,16 @@
 CFLAGS = -std=c11 -Wall -pedantic -W -Wno-missing-field-initializers -O2 -fPIC -I.
-LDFLAGS = -shared -Wl,-soname,libpeg-lite.so.0
+LDFLAGS = -shared
+TARGET = libpeg-lite.so
 
-OUT = libpeg-lite.so.0.0.1
+.PHONY: all
+all: $(TARGET) test
 
-$(OUT): $(patsubst %.c,%.o,$(wildcard *.c))
+.PHONY: test
+	cd test && $(MAKE)
+
+$(TARGET): $(patsubst %.c,%.o,$(wildcard *.c))
 	$(CC) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) -o$@
 
 .PHONY: clean
 clean:
-	rm -f $(OUT) *.o
+	rm -f $(TARGET) *.o

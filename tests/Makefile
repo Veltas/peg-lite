@@ -1,6 +1,23 @@
 PROFILING = #-pg -fprofile-arcs -ftest-coverage
-CFLAGS = -std=c11 -Wall -W -pedantic -Ofast -march=native -I.. -g $(PROFILING)
+CFLAGS = -std=c11 -Wall -W -pedantic -O0 -I.. -g $(PROFILING)
 CC = gcc
 
-set_test: set_test.c ../set.c ../xarray.c
+TARGETS := $(patsubst %.c,%,$(wildcard *.c))
+
+.PHONY: all
+all: $(TARGETS)
+	for test in $(TARGETS); do {\
+		./$$test || \
+			{ echo ":::: $$test failed ::::"; exit 1; } ; \
+		valgrind --error-exitcode=1 --leak-check=full ./$$test || \
+			{ echo ":::: $$test failed in valgrind ::::"; exit 1; } ; \
+	}; done
+
+%: %.c
 	$(CC) $(CFLAGS) -o $@ $^
+
+set_test: ../set.c ../xarray.c
+
+.PHONY: clean
+clean:
+	rm -f gmon.out *.gcov *.gcda *.gcno $(TARGETS)
