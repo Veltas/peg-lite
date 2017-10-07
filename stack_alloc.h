@@ -1,9 +1,9 @@
-#ifndef STACK_ALLOC_H_INCLUDED
-#define STACK_ALLOC_H_INCLUDED
-
 // This module defines a "stack allocator", this allows one to more easily
 // allocate related objects *near* to each other. Once it is allocated it does
 // not change size.
+
+#ifndef STACK_ALLOC_H_INCLUDED
+#define STACK_ALLOC_H_INCLUDED
 
 #include <stddef.h>
 #include <peg-lite.h>
