@@ -18,6 +18,8 @@ set_test: ../set.c ../xarray.c
 
 xarray_test: ../xarray.c
 
+stack_alloc_test: ../stack_alloc.c
+
 .PHONY: clean
 clean:
 	rm -f gmon.out *.gcov *.gcda *.gcno $(TARGETS)

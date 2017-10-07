@@ -1,5 +1,6 @@
 set_test
 xarray_test
+stack_alloc_test
 gmon.out
 *.gcov
 *.gcda
