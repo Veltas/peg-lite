@@ -6,7 +6,8 @@ TARGET = libpeg-lite.so
 all: $(TARGET) test
 
 .PHONY: test
-	cd test && $(MAKE)
+test:
+	cd tests && $(MAKE)
 
 $(TARGET): $(patsubst %.c,%.o,$(wildcard *.c))
 	$(CC) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) -o$@
@@ -14,3 +15,4 @@ $(TARGET): $(patsubst %.c,%.o,$(wildcard *.c))
 .PHONY: clean
 clean:
 	rm -f $(TARGET) *.o
+	cd tests && $(MAKE) clean
