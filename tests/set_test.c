@@ -9,8 +9,6 @@
 
 #define MIN(a, b) ((a) <= (b) ? (a) : (b))
 
-#define N_HASH_BYTES (sizeof (size_t))
-
 static void
 inc_str(unsigned char str[const 8])
 {
@@ -24,7 +22,7 @@ not_zero(unsigned char str[const 8])
   for (size_t i = 0; i < 7; ++i) if (!str[i]) ++str[i];
 }
 
-#define N MIN((size_t)-1, 200000ull)
+#define N MIN((size_t)-1, 20000ull)
 
 int
 main(void)

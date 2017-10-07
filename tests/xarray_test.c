@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define MIN(a, b) ((a) <= (b) ? (a) : (b))
-#define N MIN((size_t)-1, 1000000ul)
+#define N MIN((size_t)-1, 200000ul)
 
 int
 main(void)

@@ -6,20 +6,19 @@ TARGETS := $(patsubst %.c,%,$(wildcard *.c))
 
 .PHONY: all
 all: $(TARGETS)
-	for test in $(TARGETS); do {\
-		valgrind --quiet --error-exitcode=1 --leak-check=full ./$$test || \
-			{ echo ":::: $$test failed ::::"; exit 1; } ; \
-	}; done
 
 %: %.c
 	$(CC) $(CFLAGS) -o $@ $^
+	@echo Running test: $@
+	@valgrind --quiet --error-exitcode=1 --leak-check=full ./$@ || \
+	  { echo ":::: $@ failed ::::"; rm $@; exit 1; } ; \
+
+.PHONY: clean
+clean:
+	rm -f gmon.out *.gcov *.gcda *.gcno $(TARGETS)
 
 set_test: ../set.c ../xarray.c
 
 xarray_test: ../xarray.c
 
 stack_alloc_test: ../stack_alloc.c
-
-.PHONY: clean
-clean:
-	rm -f gmon.out *.gcov *.gcda *.gcno $(TARGETS)
