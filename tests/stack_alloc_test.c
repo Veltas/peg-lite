@@ -8,7 +8,7 @@
 int
 main(void)
 {
-  // Calculate require capacity
+  // Calculate required capacity
   size_t test_cap = 0;
   stack_acc_size(&test_cap, sizeof (size_t *[N]));
   for (size_t i = 0; i < N; ++i) {
