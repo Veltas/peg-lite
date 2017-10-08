@@ -159,7 +159,7 @@ DLL_PUBLIC void *
 peg_load_grammar(const char source[const])
 {
   struct grammar *const grammar = &(struct grammar){0};
-  UNUSED(source); // FIXME
+  UNUSED(source[0]); // FIXME
   //TODO
   struct grammar_holder *const holder = flatten_grammar(grammar);
   free_frag_grammar(grammar);
