@@ -1,5 +1,5 @@
 # PROFILING = -pg -fprofile-arcs -ftest-coverage
-C_WARN = -Wall -pedantic -W -Wno-missing-field-initializers
+C_WARN = -Wall -pedantic -W -Wno-missing-field-initializers -Werror
 CFLAGS = -std=c11 $(C_WARN) -O0 -I.. -g $(PROFILING)
 CC = gcc
 

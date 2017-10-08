@@ -1,6 +1,6 @@
 CC      = gcc
 C_OPT   = -O3 -flto
-C_WARN  = -Wall -pedantic -W -Wno-missing-field-initializers
+C_WARN  = -Wall -pedantic -W -Wno-missing-field-initializers -Werror
 CFLAGS  = -std=c11 $(C_WARN) $(C_OPT) -fPIC -I.
 LDFLAGS = $(CFLAGS) -shared
 TARGET  = libpeg-lite.so

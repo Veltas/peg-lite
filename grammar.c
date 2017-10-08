@@ -6,6 +6,8 @@
 
 #include "grammar.h"
 
+#define UNUSED(x) ((void)(sizeof (x)))
+
 static void
 flat_size_choice_contents(size_t *const result, const struct rule *const rule)
 {
@@ -151,6 +153,7 @@ DLL_PUBLIC void *
 peg_load_grammar(const char source[const])
 {
   struct grammar *const grammar = &(struct grammar){0};
+  UNUSED(source); // FIXME
   //TODO
   struct grammar_holder *const holder = flatten_grammar(grammar);
   free_frag_grammar(grammar);
