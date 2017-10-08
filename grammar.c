@@ -3,33 +3,38 @@
 #include <stdlib.h>
 #include "stack_alloc.h"
 #include "xarray.h"
+#include "set.h"
 
 #include "grammar.h"
 
 #define UNUSED(x) ((void)(sizeof (x)))
 
 static void
-flat_size_choice_contents(size_t *const result, const struct rule *const rule)
+flat_size_choice_contents(size_t *const result, struct rule *const rule)
 {
+  rule->n_choices = xarray_size(rule->choices);
   stack_acc_size(result, rule->n_choices * sizeof *rule->choices);
   for (size_t j = 0; j < rule->n_choices; ++j) {
-    const struct choice *const choice = rule->choices + j;
+    struct choice *const choice = rule->choices + j;
+    choice->n_prefixeds = xarray_size(choice->prefixeds);
     stack_acc_size(result, choice->n_prefixeds * sizeof *choice->prefixeds);
   }
 }
 
 static void
-flat_size_terminal_contents(size_t *const result, const struct rule *const rule)
+flat_size_terminal_contents(size_t *const result, struct rule *const rule)
 {
+  rule->n_terminals = xarray_size(rule->terminals);
   stack_acc_size(result, rule->n_terminals * sizeof *rule->terminals);
 }
 
 static void
-flat_size_rules(size_t *const result, const struct grammar *const grammar)
+flat_size_rules(size_t *const result, struct grammar *const grammar)
 {
+  grammar->n_rules = xarray_size(grammar->rules);
   stack_acc_size(result, grammar->n_rules * sizeof *grammar->rules);
   for (size_t i = 0; i < grammar->n_rules; ++i) {
-    const struct rule *const rule = grammar->rules + i;
+    struct rule *const rule = grammar->rules + i;
     stack_acc_size(result, strlen(rule->name) + 1);
     if (rule->type == choice_type)
       flat_size_choice_contents(result, rule);
@@ -39,15 +44,16 @@ flat_size_rules(size_t *const result, const struct grammar *const grammar)
 }
 
 static void
-flat_size_cache(size_t *const result, const struct grammar *const grammar)
+flat_size_cache(size_t *const result, struct grammar *const grammar)
 {
+  grammar->n_terminals = xarray_size(grammar->terminal_cache);
   stack_acc_size(
     result, grammar->n_terminals * sizeof *grammar->terminal_cache
   );
 }
 
 static size_t
-flat_size(const struct grammar *const grammar)
+flat_size(struct grammar *const grammar)
 {
   size_t result = 0;
   stack_acc_size(&result, sizeof (struct grammar_holder));
@@ -121,7 +127,7 @@ flatten_grammar_cache(
 }
 
 static struct grammar_holder *
-flatten_grammar(const struct grammar *const grammar)
+flatten_grammar(struct grammar *const grammar)
 {
   void *const allocator = load_stack_allocator(flat_size(grammar));
   struct grammar_holder *const holder = stack_alloc(allocator, sizeof *holder);
@@ -163,5 +169,7 @@ peg_load_grammar(const char source[const])
 DLL_PUBLIC void
 peg_free_grammar(void *const grammar)
 {
-  free_stack_allocator(((struct grammar_holder *)grammar)->allocator);
+  struct grammar_holder *const holder = grammar;
+  free_set(holder->grammar.rule_numbers);
+  free_stack_allocator(holder->allocator);
 }

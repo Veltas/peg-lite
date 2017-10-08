@@ -46,8 +46,19 @@ struct rule {
       unsigned *terminals;
     };
   };
-  peg_Hook parse_hook,
-           reject_hook;
+};
+
+struct rule_number {
+  const char *name;
+  unsigned   number;
+};
+
+struct rule_hooks {
+  unsigned rule;
+  peg_Hook *parse_hooks,
+           *reject_hooks;
+  size_t   n_parse_hooks,
+           n_reject_hooks;
 };
 
 struct grammar {
@@ -55,6 +66,7 @@ struct grammar {
   unsigned        n_terminals;
   struct rule     *rules;
   struct terminal *terminal_cache;
+  void            *rule_numbers;
 };
 
 struct grammar_holder {
