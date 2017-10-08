@@ -1,5 +1,6 @@
 # PROFILING = -pg -fprofile-arcs -ftest-coverage
-CFLAGS = -std=c11 -Wall -W -pedantic -O0 -I.. -g $(PROFILING)
+C_WARN = -Wall -pedantic -W -Wno-missing-field-initializers
+CFLAGS = -std=c11 $(C_WARN) -O0 -I.. -g $(PROFILING)
 CC = gcc
 
 TARGETS := $(patsubst %.c,%,$(wildcard *.c))

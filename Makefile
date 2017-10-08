@@ -1,7 +1,9 @@
-CC = gcc
-CFLAGS = -std=c11 -Wall -pedantic -W -Wno-missing-field-initializers -O2 -fPIC -I.
-LDFLAGS = -shared
-TARGET = libpeg-lite.so
+CC      = gcc
+C_OPT   = -O3 -flto
+C_WARN  = -Wall -pedantic -W -Wno-missing-field-initializers
+CFLAGS  = -std=c11 $(C_WARN) $(C_OPT) -fPIC -I.
+LDFLAGS = $(CFLAGS) -shared
+TARGET  = libpeg-lite.so
 
 .PHONY: all
 all: test dist
