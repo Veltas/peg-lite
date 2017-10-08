@@ -153,7 +153,6 @@ set_next(const void *const set, void *const key)
   const struct set  *const set_i = set;
   struct link       *link        = NULL;
   struct list       *bucket;
-  if (!set_i->size) return NULL;
   if (key) {
     link = (void *)((char *)key - offsetof(struct link, data));
     link = link->next;
