@@ -28,6 +28,11 @@ set_insert(void *set, void *key);
 DLL_LOCAL void *
 set_get(void *set, void *key);
 
+// Returns pointer to next key, or NULL if was last. Order is based on current
+// bucket layout. Passing a null pointer for key will get the first key.
+DLL_LOCAL void *
+set_next(const void *set, void *key);
+
 // Removes comparable key. UB if no comparable key in set.
 DLL_LOCAL void
 set_remove(void *set, void *key);

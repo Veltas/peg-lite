@@ -63,7 +63,7 @@ free_set(void *const set)
 }
 
 static struct list *
-get_bucket(const struct set *const set, void *const key)
+get_bucket(const struct set *const set, const void *const key)
 {
   return set->buckets + set->hash(key) % xarray_size(set->buckets);
 }
@@ -147,6 +147,28 @@ set_get(void *const set, void *const key)
   return link ? link->data : NULL;
 }
 
+DLL_LOCAL void *
+set_next(const void *const set, void *const key)
+{
+  const struct set  *const set_i = set;
+  struct link       *link        = NULL;
+  struct list       *bucket;
+  if (!set_i->size) return NULL;
+  if (key) {
+    link = (void *)((char *)key - offsetof(struct link, data));
+    link = link->next;
+    bucket = link ? get_bucket(set, link->data) : get_bucket(set, key)+1;
+  } else bucket = set_i->buckets;
+  struct list *const end = set_i->buckets + xarray_size(set_i->buckets);
+  if (!link && bucket != end) link = bucket->first;
+  if (link) return link->data;
+  for (; bucket != end; ++bucket) {
+    link = bucket->first;
+    if (link) return link->data;
+  }
+  return NULL;
+}
+
 static void
 remove_link(
   struct set  *const set,
@@ -175,7 +197,7 @@ set_remove_at(void *const set, void *const ptr)
 {
   remove_link(
     set,
-    (void *)((unsigned char *)ptr - offsetof(struct link, data)),
+    (void *)((char *)ptr - offsetof(struct link, data)),
     get_bucket(set, ptr)
   );
 }
